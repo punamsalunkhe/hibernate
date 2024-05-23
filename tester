@@ -1,0 +1,169 @@
+tester class
+
+1) add_new_category
+package com.app.tester;
+
+import static com.app.utils.HibernateUtils.getFactory;
+
+import java.util.Scanner;
+
+import org.hibernate.SessionFactory;
+
+import com.app.dao.CategoryDao;
+import com.app.dao.CategoryDaoImpl;
+import com.app.entities.Category;
+
+public class AddNewCategory {
+
+	public static void main(String[] args) {
+		try (SessionFactory sf = getFactory(); Scanner sc = new Scanner(System.in)) {
+			// create category dao instance
+			CategoryDao dao = new CategoryDaoImpl();
+			System.out.println("Enter category details - name ");
+			String name = sc.nextLine();
+			System.err.println("Enter desc");
+			Category cat = new Category(name, sc.nextLine());
+			System.out.println(dao.addNewCategory(cat));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+2).create_new_post
+package com.app.tester;
+
+import static com.app.utils.HibernateUtils.getFactory;
+
+import java.util.Scanner;
+
+import org.hibernate.SessionFactory;
+
+import com.app.dao.BlogPostDao;
+import com.app.dao.BlogPostDaoImpl;
+import com.app.dao.CategoryDao;
+import com.app.dao.CategoryDaoImpl;
+import com.app.entities.BlogPost;
+import com.app.entities.Category;
+
+public class CreateNewPost {
+
+	public static void main(String[] args) {
+		try (SessionFactory sf = getFactory(); Scanner sc = new Scanner(System.in)) {
+			// create post dao instance
+			BlogPostDao dao = new BlogPostDaoImpl();
+			System.out.println("Enter post details -title ");
+			String title = sc.nextLine();
+			System.out.println("Enter desc");
+			String desc = sc.nextLine();
+			System.out.println("Enter content");
+			String content = sc.nextLine();
+			System.out.println("Enter category id n author id");
+			BlogPost post = new BlogPost(title, desc, content);
+			System.out.println(dao.createNewBlog(post, sc.nextLong(), sc.nextLong()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+3).register_user_with_regamount
+package com.app.tester;
+
+import static com.app.utils.HibernateUtils.getFactory;
+
+import java.time.LocalDate;
+import java.util.Scanner;
+
+import org.hibernate.SessionFactory;
+
+import com.app.dao.UserDao;
+import com.app.dao.UserDaoImpl;
+import com.app.entities.Role;
+import com.app.entities.User;
+import static java.time.LocalDate.parse;
+import static com.app.entities.Role.valueOf;
+/*
+ * Sample data
+ * a1 b1 a1@gmail.com 1234 1990-10-20 345678909 admin 0
+ * a2 b2 a2@gmail.com 2234 1991-10-20 675678909 blogger 1000
+ */
+public class RegisterUserwithRegAmount {
+
+	public static void main(String[] args) {
+		try (SessionFactory sf = getFactory();
+				Scanner sc = new Scanner(System.in)) {
+			//create user dao instance
+			UserDao userDao=new UserDaoImpl();
+			System.out
+					.println("Enter user details - firstName,  " + "lastName,  email,  password,  dob,  phoneNo, role reg amount");
+			User transientUser = new User(sc.next(), sc.next(), sc.next(), sc.next(), parse(sc.next()), sc.next(),
+					valueOf(sc.next().toUpperCase()),sc.nextDouble());
+			
+			System.out.println(userDao.registerUser(transientUser));
+		} // JVM sf.close() => cleaning up of DBCP
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+4).test_hibernate
+package com.app.tester;
+
+import static com.app.utils.HibernateUtils.getFactory;
+
+import org.hibernate.SessionFactory;
+
+public class TestHibernate {
+
+	public static void main(String[] args) {
+		try (SessionFactory sf = getFactory()) {
+			System.out.println("Hibernate frmwork loaded " + sf);
+		} //JVM sf.close => cleanig up of DBCP
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+5).user_signin
+package com.app.tester;
+
+import static com.app.utils.HibernateUtils.getFactory;
+
+import java.time.LocalDate;
+import java.util.Scanner;
+
+import org.hibernate.SessionFactory;
+
+import com.app.dao.UserDao;
+import com.app.dao.UserDaoImpl;
+import com.app.entities.Role;
+import com.app.entities.User;
+import static java.time.LocalDate.parse;
+import static com.app.entities.Role.valueOf;
+
+public class UserSignin {
+
+	public static void main(String[] args) {
+		try (SessionFactory sf = getFactory(); 
+				Scanner sc = new Scanner(System.in)) {
+			// create user dao instance
+			UserDao userDao = new UserDaoImpl();
+			System.out.println("Enter user email n password");
+			System.out.println(userDao.authenticateUser(sc.next(),
+					sc.next()));
+		} // JVM sf.close() => cleaning up of DBCP
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
